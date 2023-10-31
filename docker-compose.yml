@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vlad9976m/my_flask_app:v1.00
+    container_name: my-flask-application
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_RUN_HOST=0.0.0.0
+    volumes:
+      - ./scores:/app/scores  # Mount the scores directory
+    networks:
+      - wog
+    depends_on:
+      - mysql  # Depend on the MySQL service
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "Aa123456!"  # Use MYSQL_ROOT_PASSWORD to set the root user password
+      MYSQL_DATABASE: "games"
+    networks:
+      - wog
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mount the SQL initialization script
+    ports:
+      - "3306:3306"  # Map MySQL port to host
+
+networks:
+  wog:
+    driver: bridge
