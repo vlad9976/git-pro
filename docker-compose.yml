@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vlad9976m/my_flask_app:v1.22
+    container_name: my-flask-application
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_RUN_HOST=0.0.0.0
+    volumes:
+      - ./scores:/app/scores  # Mount the scores directory
+    networks:
+      - wog
+    depends_on:
+      - mysql  # Depend on the MySQL service
+
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: Aa123456!
+      MYSQL_DATABASE: games
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: Aa123456!
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - wog
+    command: --innodb_use_native_aio=0 --default-authentication-plugin=mysql_native_password
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./alembic.ini:/app/alembic/alembic.ini
+      - ./migrations:/app/alembic/versions
+    environment:
+      ALEMBIC_CONFIG: /app/alembic/alembic.ini
+    depends_on:
+      - mysql
+    networks:
+      - wog
+
+networks:
+  wog:
+    driver: bridge

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Scores</title>
+</head>
+<body>
+    <h1>Hello and Welcome</h1>
+    <h2>Your Scores are:</h2>
+    <ul>
+        {% for score in scores %}
+        <li>{{ score.username }}: {{ score.score }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
