@@ -1,0 +1,361 @@
+Index: docker-compose.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>version: '3.8'\r\n\r\nservices:\r\n  web:\r\n    build:\r\n      context: .\r\n      dockerfile: Dockerfile\r\n    image: vlad9976m/my_flask_app:v1.00\r\n    container_name: my-flask-application\r\n    ports:\r\n      - \"5000:5000\"\r\n    environment:\r\n      - FLASK_APP=app.py\r\n      - FLASK_RUN_HOST=0.0.0.0\r\n    volumes:\r\n      - ./scores:/app/scores  # Mount the scores directory\r\n    networks:\r\n      - wog\r\n    depends_on:\r\n      - mysql  # Depend on the MySQL service\r\n\r\n  mysql:\r\n    image: mysql:latest\r\n    container_name: mysql\r\n    environment:\r\n      MYSQL_ROOT_PASSWORD: \"Aa123456!\"  # Use MYSQL_ROOT_PASSWORD to set the root user password\r\n      MYSQL_DATABASE: \"games\"\r\n    networks:\r\n      - wog\r\n    volumes:\r\n      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mount the SQL initialization script\r\n    ports:\r\n      - \"3306:3306\"  # Map MySQL port to host\r\n\r\nnetworks:\r\n  wog:\r\n    driver: bridge\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/docker-compose.yml b/docker-compose.yml
+--- a/docker-compose.yml	(revision afa5fb5b86fabeb6fe5da73e6a8745bd4aced9fe)
++++ b/docker-compose.yml	(date 1699214005803)
+@@ -5,7 +5,7 @@
+     build:
+       context: .
+       dockerfile: Dockerfile
+-    image: vlad9976m/my_flask_app:v1.00
++    image: vlad9976m/my_flask_app:v1.22
+     container_name: my-flask-application
+     ports:
+       - "5000:5000"
+@@ -21,16 +21,33 @@
+ 
+   mysql:
+     image: mysql:latest
+-    container_name: mysql
+     environment:
+-      MYSQL_ROOT_PASSWORD: "Aa123456!"  # Use MYSQL_ROOT_PASSWORD to set the root user password
+-      MYSQL_DATABASE: "games"
++      MYSQL_ROOT_PASSWORD: Aa123456!
++      MYSQL_DATABASE: games
++      MYSQL_USER: mysql
++      MYSQL_PASSWORD: Aa123456!
++      MYSQL_ROOT_HOST: '%'
++    ports:
++      - "3307:3306"
++    volumes:
++      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+     networks:
+       - wog
++    command: --innodb_use_native_aio=0 --default-authentication-plugin=mysql_native_password
++
++  app:
++    build:
++      context: .
++      dockerfile: Dockerfile
+     volumes:
+-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mount the SQL initialization script
+-    ports:
+-      - "3306:3306"  # Map MySQL port to host
++      - ./alembic.ini:/app/alembic/alembic.ini
++      - ./migrations:/app/alembic/versions
++    environment:
++      ALEMBIC_CONFIG: /app/alembic/alembic.ini
++    depends_on:
++      - mysql
++    networks:
++      - wog
+ 
+ networks:
+   wog:
+Index: app.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from flask import Flask, render_template\r\nimport os\r\nimport mysql.connector\r\n\r\napp = Flask(__name__)\r\n\r\n# MySQL database configuration\r\ndb_config = {\r\n    'user': 'root',\r\n    'password': 'Aa123456!',\r\n    'host': 'mysql',  # Use the correct service name\r\n    'database': 'games'\r\n}\r\n\r\ndef get_user_scores():\r\n    try:\r\n        connection = mysql.connector.connect(**db_config)\r\n        cursor = connection.cursor()\r\n\r\n        query = \"SELECT username, score FROM users_scores\"\r\n        cursor.execute(query)\r\n\r\n        scores = cursor.fetchall()\r\n        return scores\r\n\r\n    except Exception as e:\r\n        print(\"Error fetching scores from the database:\", str(e))\r\n        return []\r\n\r\n@app.route(\"/\")\r\ndef index():\r\n    scores = get_user_scores()\r\n\r\n    return render_template(\"index.html\", scores=scores)\r\n\r\n@app.route(\"/shutdown\", methods=[\"POST\"])\r\ndef shutdown():\r\n    print(\"Shutting down gracefully...\")\r\n    os.kill(os.getpid(), 9)  # Terminate the current process\r\n    return \"Server shutting down...\"\r\n\r\nif __name__ == \"__main__\":\r\n    app.run(host='0.0.0.0', port=5000)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app.py b/app.py
+--- a/app.py	(revision afa5fb5b86fabeb6fe5da73e6a8745bd4aced9fe)
++++ b/app.py	(date 1699259958642)
+@@ -1,43 +1,68 @@
+-from flask import Flask, render_template
++
+ import os
+ import mysql.connector
++from flask import Flask, render_template, request
+ 
+ app = Flask(__name__)
+ 
+-# MySQL database configuration
+-db_config = {
+-    'user': 'root',
+-    'password': 'Aa123456!',
+-    'host': 'mysql',  # Use the correct service name
+-    'database': 'games'
+-}
+-
+ def get_user_scores():
+     try:
+-        connection = mysql.connector.connect(**db_config)
+-        cursor = connection.cursor()
++        # Create a MySQL connection
++        connection = mysql.connector.connect(
++            host='git-pro-mysql-1',
++            user='mysql',
++            password='Aa123456!',
++            database='games'
++        )
+ 
++        cursor = connection.cursor(dictionary=True)
++
++        # Query the database
+         query = "SELECT username, score FROM users_scores"
+         cursor.execute(query)
+ 
++        # Get the results of the query
+         scores = cursor.fetchall()
++
++        # Close the cursor and connection
++        cursor.close()
++        connection.close()
++
+         return scores
+ 
+     except Exception as e:
++        # Log the error
+         print("Error fetching scores from the database:", str(e))
++
++        # Return an empty list
++
+         return []
+ 
+ @app.route("/")
+ def index():
++
+     scores = get_user_scores()
+ 
++
++    # Get the user scores
++    scores = get_user_scores()
++
++    # Render the index template with the user scores
++
+     return render_template("index.html", scores=scores)
+ 
+-@app.route("/shutdown", methods=["POST"])
+-def shutdown():
+-    print("Shutting down gracefully...")
++
++
++    # Validate the request
++    if request.method != "POST":
++        return "Invalid request method", 405
++
++    # Shut down the server gracefully
+     os.kill(os.getpid(), 9)  # Terminate the current process
++
++    # Return a message to the user
+     return "Server shutting down..."
+ 
+ if __name__ == "__main__":
++
+     app.run(host='0.0.0.0', port=5000)
+Index: .idea/vcs.xml
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+deleted file mode 100644
+--- a/.idea/vcs.xml	(revision afa5fb5b86fabeb6fe5da73e6a8745bd4aced9fe)
++++ /dev/null	(revision afa5fb5b86fabeb6fe5da73e6a8745bd4aced9fe)
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="VcsDirectoryMappings">
+-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: my.cnf
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/my.cnf b/my.cnf
+new file mode 100644
+--- /dev/null	(date 1699213875832)
++++ b/my.cnf	(date 1699213875832)
+@@ -0,0 +1,36 @@
++# For advice on how to change settings please see
++# http://dev.mysql.com/doc/refman/8.2/en/server-configuration-defaults.html
++
++[mysqld]
++#
++# Remove leading # and set to the amount of RAM for the most important data
++# cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.
++# innodb_buffer_pool_size = 128M
++#
++# Remove leading # to turn on a very important data integrity option: logging
++# changes to the binary log between backups.
++# log_bin
++#
++# Remove leading # to set options mainly useful for reporting servers.
++# The server defaults are faster for transactions and fast SELECTs.
++# Adjust sizes as needed, experiment to find the optimal values.
++# join_buffer_size = 128M
++# sort_buffer_size = 2M
++# read_rnd_buffer_size = 2M
++
++# Remove leading # to revert to previous value for default_authentication_plugin,
++# this will increase compatibility with older clients. For background, see:
++# https://dev.mysql.com/doc/refman/8.2/en/server-system-variables.html#sysvar_default_authentication_plugin
++default-authentication-plugin=mysql_native_password
++skip-host-cache
++skip-name-resolve
++datadir=/var/lib/mysql
++socket=/var/run/mysqld/mysqld.sock
++secure-file-priv=/var/lib/mysql-files
++user=mysql
++pid-file=/var/run/mysqld/mysqld.pid
++[client]
++socket=/var/run/mysqld/mysqld.sock
++
++!includedir /etc/mysql/conf.d/
++
+Index: init.sql
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>USE games;\r\n\r\nCREATE TABLE IF NOT EXISTS users_scores (\r\n    id INT AUTO_INCREMENT PRIMARY KEY,\r\n    username VARCHAR(255) NOT NULL,\r\n    score INT NOT NULL\r\n);\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/init.sql b/init.sql
+--- a/init.sql	(revision afa5fb5b86fabeb6fe5da73e6a8745bd4aced9fe)
++++ b/init.sql	(date 1699213875829)
+@@ -5,3 +5,8 @@
+     username VARCHAR(255) NOT NULL,
+     score INT NOT NULL
+ );
++<<<<<<< HEAD
++=======
++
++
++>>>>>>> 3363ca2 (Pretty fully working)
+Index: .idea/git-pro.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"PYTHON_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\">\r\n    <content url=\"file://$MODULE_DIR$\" />\r\n    <orderEntry type=\"inheritedJdk\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n  </component>\r\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/git-pro.iml b/.idea/git-pro.iml
+--- a/.idea/git-pro.iml	(revision afa5fb5b86fabeb6fe5da73e6a8745bd4aced9fe)
++++ b/.idea/git-pro.iml	(date 1699259772979)
+@@ -2,7 +2,7 @@
+ <module type="PYTHON_MODULE" version="4">
+   <component name="NewModuleRootManager">
+     <content url="file://$MODULE_DIR$" />
+-    <orderEntry type="inheritedJdk" />
++    <orderEntry type="jdk" jdkName="Python 3.10" jdkType="Python SDK" />
+     <orderEntry type="sourceFolder" forTests="false" />
+   </component>
+ </module>
+\ No newline at end of file
+Index: Dockerfile
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Use the official Python image as the base image\r\nFROM python:3.8-slim-buster\r\n\r\n# Set the working directory in the container\r\nWORKDIR /app\r\n\r\n# Copy the current directory contents into the container at /app\r\nCOPY . /app\r\n\r\n# Install dependencies\r\nRUN pip install --no-cache-dir -r requirements.txt\r\n\r\n# Set environment variables\r\nENV FLASK_APP app.py\r\nENV FLASK_RUN_HOST 0.0.0.0\r\n\r\n# Create a directory to mount the scores\r\nRUN mkdir -p /app/scores\r\n\r\n# Command to run the application\r\nCMD [\"python3\", \"Main_Game.py\"]\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Dockerfile b/Dockerfile
+--- a/Dockerfile	(revision afa5fb5b86fabeb6fe5da73e6a8745bd4aced9fe)
++++ b/Dockerfile	(date 1699213875816)
+@@ -1,5 +1,9 @@
+ # Use the official Python image as the base image
++<<<<<<< HEAD
+ FROM python:3.8-slim-buster
++=======
++FROM python:3.8-buster
++>>>>>>> 3363ca2 (Pretty fully working)
+ 
+ # Set the working directory in the container
+ WORKDIR /app
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"016a158c-7635-41b3-891f-ce76ce9f14f8\" name=\"Changes\" comment=\"\" />\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2XWTNztCKHErq2OM6rSj4HkDqN4\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"last_opened_file_path\": \"C:/Users/VladMichaelov/PycharmProjects/git-pro\"\r\n  }\r\n}]]></component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"016a158c-7635-41b3-891f-ce76ce9f14f8\" name=\"Changes\" comment=\"\" />\r\n      <created>1698743799825</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1698743799825</updated>\r\n    </task>\r\n    <servers />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision afa5fb5b86fabeb6fe5da73e6a8745bd4aced9fe)
++++ b/.idea/workspace.xml	(date 1699259971629)
+@@ -1,11 +1,30 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="AutoImportSettings">
++    <option name="autoReloadType" value="SELECTIVE" />
++  </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="016a158c-7635-41b3-891f-ce76ce9f14f8" name="Changes" comment="" />
++    <list default="true" id="016a158c-7635-41b3-891f-ce76ce9f14f8" name="Changes" comment="">
++      <change afterPath="$PROJECT_DIR$/my.cnf" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/git-pro.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/git-pro.iml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/init.sql" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+     <option name="LAST_RESOLUTION" value="IGNORE" />
++  </component>
++  <component name="Git.Settings">
++    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++  </component>
++  <component name="MarkdownSettingsMigration">
++    <option name="stateVersion" value="1" />
+   </component>
+   <component name="ProjectId" id="2XWTNztCKHErq2OM6rSj4HkDqN4" />
+   <component name="ProjectViewState">
+@@ -16,7 +35,8 @@
+   "keyToString": {
+     "RunOnceActivity.OpenProjectViewOnStart": "true",
+     "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "last_opened_file_path": "C:/Users/VladMichaelov/PycharmProjects/git-pro"
++    "last_opened_file_path": "C:/Users/VladMichaelov/PycharmProjects/git-pro",
++    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+   }
+ }]]></component>
+   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+@@ -30,4 +50,15 @@
+     </task>
+     <servers />
+   </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State />
++          </value>
++        </entry>
++      </map>
++    </option>
++  </component>
+ </project>
+\ No newline at end of file
+Index: requirements.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>flask~=2.3.2\r\nrequests~=2.31.0\r\ncolorama~=0.4.4\r\npip~=23.2.1\r\nattrs~=23.1.0\r\nPillow~=10.0.0\r\ndocutils~=0.16\r\nJinja2~=3.1.2\r\nsetuptools~=65.5.0\r\nselenium~=4.10.0\r\nmysql-connector-python~=8.1.0\r\ntqdm~=4.66.1
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/requirements.txt b/requirements.txt
+--- a/requirements.txt	(revision afa5fb5b86fabeb6fe5da73e6a8745bd4aced9fe)
++++ b/requirements.txt	(date 1699259567186)
+@@ -9,4 +9,7 @@
+ setuptools~=65.5.0
+ selenium~=4.10.0
+ mysql-connector-python~=8.1.0
+-tqdm~=4.66.1
+\ No newline at end of file
++tqdm~=4.66.1
++SQLAlchemy~=2.0.22
++alembic~=1.12.1
++mysqlclient
+\ No newline at end of file
