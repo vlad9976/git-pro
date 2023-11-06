@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: vlad9976m/my_flask_app:v1.22
+    image: vlad9976m/my_flask_app:v1.23
     container_name: my-flask-application
     ports:
       - "5000:5000"

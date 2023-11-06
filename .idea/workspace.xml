@@ -4,18 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="016a158c-7635-41b3-891f-ce76ce9f14f8" name="Changes" comment="1.00-new">
-      <change afterPath="$PROJECT_DIR$/my.cnf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/git-pro.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/git-pro.iml" afterDir="false" />
+    <list default="true" id="016a158c-7635-41b3-891f-ce76ce9f14f8" name="Changes" comment="reverted to pretty">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Main_Game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main_Game.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Score.py" beforeDir="false" afterPath="$PROJECT_DIR$/Score.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/init.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/my.cnf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,11 +104,37 @@
       <option name="project" value="LOCAL" />
       <updated>1698744023447</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="reverted to pretty">
+      <created>1699260192075</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1699260192075</updated>
+    </task>
+    <task id="LOCAL-00003" summary="reverted to pretty">
+      <created>1699260197198</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1699260197199</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="1.00-new" />
-    <option name="LAST_COMMIT_MESSAGE" value="1.00-new" />
+    <MESSAGE value="reverted to pretty" />
+    <option name="LAST_COMMIT_MESSAGE" value="reverted to pretty" />
   </component>
 </project>
