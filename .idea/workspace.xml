@@ -4,7 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="016a158c-7635-41b3-891f-ce76ce9f14f8" name="Changes" comment="reverted to pretty" />
+    <list default="true" id="016a158c-7635-41b3-891f-ce76ce9f14f8" name="Changes" comment="reverted to pretty">
+      <change afterPath="$PROJECT_DIR$/docker-run" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scores-helm-chart/mysql-chart/files/init.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scores-helm-chart/mysql-chart/templates/init-configmap.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_6_2023_10_39_AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_6_2023_10_39_AM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Live.py" beforeDir="false" afterPath="$PROJECT_DIR$/Live.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main_Game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main_Game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/alembic.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/env.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user.txt" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,11 +38,12 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/VladMichaelov/PycharmProjects/git-pro/sql&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/VladMichaelov/PycharmProjects/ansible&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\VladMichaelov\PycharmProjects\git-pro\scores-helm-chart\mysql-chart\files" />
       <recent name="C:\Users\VladMichaelov\PycharmProjects\git-pro\sql" />
     </key>
   </component>
@@ -120,7 +134,14 @@
       <option name="project" value="LOCAL" />
       <updated>1699274342345</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="reverted to pretty">
+      <created>1699274699843</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1699274699843</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mysql-chart.fullname" . }}
+  labels:
+    app: {{ include "mysql-chart.name" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "mysql-chart.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "mysql-chart.name" . }}
+    spec:
+      containers:
+        - name: {{ .Value.mysql.containerName }}
+          image: {{ .Values.mysql.image }}
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: {{ .Values.mysql.rootPassword | quote }}
+          volumeMounts:
+            - name: mysql-init-scripts
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: mysql-init-scripts
+          configMap:
+            name: {{ include "mysql-chart.fullname" . }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mysql-chart.fullname" . }}
+data:
+  init.sql: |
+    USE games;
+    CREATE TABLE IF NOT EXISTS users_scores (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      username VARCHAR(255) NOT NULL,
+      score INT NOT NULL
+    );

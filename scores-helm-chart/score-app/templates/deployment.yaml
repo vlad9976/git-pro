@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "flaskapp.fullname" . }}
+spec:
+  replicas: {{ .Values.flaskapp.replicaCount }}
+  selector:
+    matchLabels:
+      app: flaskapp
+  template:
+    metadata:
+      labels:
+        app: flaskapp
+    spec:
+      containers:
+        - name: {{ .Values.flaskapp.containerName }}
+          image: "{{ .Values.flaskapp.image.repository }}:{{ .Values.flaskapp.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.flaskapp.image.pullPolicy }}
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLASK_APP
+              value: {{ index .Values.flaskapp.environment 0 | quote }}
+            - name: FLASK_RUN_HOST
+              value: {{ index .Values.flaskapp.environment 1 | quote }}

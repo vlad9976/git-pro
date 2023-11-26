@@ -1,0 +1,8 @@
+# templates/init-configmap.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mysql-chart.fullname" . }}
+data:
+  init.sql: {{ .Files.Get "files/init.sql" | quote | nindent 4 }}

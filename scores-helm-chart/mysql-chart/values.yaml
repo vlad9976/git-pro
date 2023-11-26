@@ -1,0 +1,30 @@
+# Default values for mysql-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+mysql:
+  enabled: true
+  image: mysql:latest
+  rootPassword: Aa123456!
+  database: games
+  user: mysql
+  password: Aa123456!
+  containerName: mysql-container
+
+
+service:
+  type: ClusterIP
+  ports:
+    - name: mysql
+      port: 3306  # Default MySQL port
+      targetPort: 3306
+    - name: custom-port
+      port: 3307  # Your custom port
+      targetPort: 3307
+
+ingress:
+  enabled: true
+
+
+

@@ -1,0 +1,20 @@
+
+
+flaskapp:
+  replicaCount: 1
+  image:
+    repository: vlad9976m/my_flask_app
+    tag: v1.23
+    pullPolicy: IfNotPresent
+  containerName: my-flask-application
+  environment:
+    - FLASK_APP=app.py
+    - FLASK_RUN_HOST=0.0.0.0
+    - DATABASE_URL=mysql://mysql:Aa123456!@my-mysql-chart:3306/games
+
+  service:
+    type: NodePort
+    port: 5000  # Define the service port here
+
+ingress:
+  enabled: true

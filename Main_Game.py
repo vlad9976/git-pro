@@ -1,4 +1,4 @@
-from Live import Welcome, load_game
+from Live import Welcome
 from run_app import start_flask_server
 
 

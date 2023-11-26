@@ -35,20 +35,6 @@ services:
       - wog
     command: --innodb_use_native_aio=0 --default-authentication-plugin=mysql_native_password
 
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./alembic.ini:/app/alembic/alembic.ini
-      - ./migrations:/app/alembic/versions
-    environment:
-      ALEMBIC_CONFIG: /app/alembic/alembic.ini
-    depends_on:
-      - mysql
-    networks:
-      - wog
-
 networks:
   wog:
     driver: bridge

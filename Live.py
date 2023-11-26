@@ -19,7 +19,7 @@ You can find your score here --> http://127.0.0.1:5000/''')
     load_game(name)
 
 
-def load_game(name):  # Will load the games
+def load_game(name):  # Load game (With parameter name from Welcome())
     game_1 = "1. Guess Game - Guess a number and see if you chose like the computer"
     game_2 = "2. Memory Game - A sequence of numbers will appear for and you have to guess it back"
     game_3 = "3. Rock,Paper,Scissors Game - Lets see if you can beat the computer"
