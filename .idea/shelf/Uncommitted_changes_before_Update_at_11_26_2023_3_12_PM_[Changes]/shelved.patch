@@ -1,0 +1,141 @@
+Index: Live.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\r\nimport time\r\nfrom colorama import Fore\r\n\r\nfrom guess import game_ran\r\nfrom mem_game import memory_game\r\nfrom rock_paper import rock_game\r\nfrom Score import add_score\r\nfrom run_app import stop_flask_server\r\nfrom utils import cls_screen, load_game_assets\r\n\r\n\r\n\r\ndef Welcome():  # Ask for a name.\r\n    name = input(\"Enter your name: \")\r\n    print(f'''{Fore.RED}Hello {name} and welcome to the World of Games (WoG).Here you can find many cool games to play.\r\nFlask Server Running in background.\r\nYou can find your score here --> http://127.0.0.1:5000/''')\r\n    load_game(name)\r\n\r\n\r\ndef load_game(name):  # Load game (With parameter name from Welcome())\r\n    game_1 = \"1. Guess Game - Guess a number and see if you chose like the computer\"\r\n    game_2 = \"2. Memory Game - A sequence of numbers will appear for and you have to guess it back\"\r\n    game_3 = \"3. Rock,Paper,Scissors Game - Lets see if you can beat the computer\"\r\n    stop_web = \"To stop the web server just press 'stop'\"\r\n    print(\"Please choose a game to play\")\r\n    print(f\"{Fore.BLUE}{game_1}\\n{game_2}\\n{game_3}\\n{Fore.RED}{stop_web}\")\r\n\r\n    # Saves user game and difficulty.\r\n    user_game = \"Game: \"\r\n    difficulty = \"Difficulty: \"\r\n    # Ask user to choose a number 1-3\r\n\r\n    a = input(\"Choose a number 1, 2, 3: \")\r\n    if a.lower() == \"stop\":\r\n        # Stop the web server\r\n        stop_flask_server()\r\n    elif a.isdigit():\r\n        a = int(a)\r\n        while a > 4 or a < 1:\r\n            print(\"The input should be a number between 1 to 3 OR 'stop':\")\r\n            a = int(input(\"Choose a number 1, 2, 3: \"))\r\n    # ============= game 1 Guess-Game=============\r\n    if a == 1:\r\n        diff = {1: 20, 2: 40, 3: 60, 4: 80, 5: 100}\r\n        print(Fore.GREEN + game_1)\r\n        b = int(input(\"Please choose game difficulty from 1 to 5: \"))\r\n        while b > 5 or b < 1:\r\n            print(\"the input suppose to be a number between 1 to 5\")\r\n            b = int(input(\"Please choose game difficulty from 1 to 5: \"))\r\n        difficulty = difficulty + str(b)\r\n        user_game = user_game + str(a)\r\n        print(f\"{user_game}, {difficulty}\")\r\n        f\"{Fore.CYAN} {load_game_assets()}\"\r\n        time.sleep(1), cls_screen()\r\n        if b == 1:\r\n            print(\"Hello This is a Guessing game you have 10 guesses, Guess Number 1-20\")\r\n        elif b == 2:\r\n            print(\"Hello This is a Guessing game you have 10 guesses, Guess Number 1-40\")\r\n        elif b == 3:\r\n            print(\"Hello This is a Guessing game you have 10 guesses, Guess Number 1-60\")\r\n        elif b == 4:\r\n            print(\"Hello This is a Guessing game you have 10 guesses, Guess Number 1-80\")\r\n        elif b == 5:\r\n            print(\"Hello This is a Guessing game you have 10 guesses, Guess Number 1-100\")\r\n        if game_ran(diff[b]) == 1:\r\n            add_score(name, b)\r\n    # ============= game 2 Memory-Game=============\r\n    elif a == 2:\r\n        print(Fore.GREEN + game_2)\r\n        diff = {1: 2, 2: 4, 3: 6, 4: 8, 5: 10}\r\n        b = int(input(\"Please choose game difficulty from 1 to 5: \"))\r\n        while b > 5 or b < 1:\r\n            print(\"the input suppose to be a number between 1 to 5\")\r\n            b = int(input(\"Please choose game difficulty from 1 to 5: \"))\r\n        difficulty = difficulty + str(b)\r\n        user_game = user_game + str(a)\r\n        print(f\"{user_game}, {difficulty}\")\r\n        f\"{Fore.CYAN} {load_game_assets()}\"\r\n        time.sleep(1), cls_screen()\r\n        if b == 1:\r\n            print(\"Hello This is a Memory Game, Difficulty level 1 (2 characters)\")\r\n        elif b == 2:\r\n            print(\"Hello This is a Memory Game, Difficulty level 2 (4 characters)\")\r\n        elif b == 3:\r\n            print(\"Hello This is a Memory Game, Difficulty level 3 (6 characters)\")\r\n        elif b == 4:\r\n            print(\"Hello This is a Memory Game, Difficulty level 4 (8 characters)\")\r\n        elif b == 5:\r\n            print(\"Hello This is a Memory Game, Difficulty level 5 (10 characters)\")\r\n        if memory_game(diff[b]) == 1:\r\n            add_score(name, b)\r\n    # ============= game 3 Rock,Paper,Scissors Game=============\r\n    elif a == 3:\r\n        diff = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}\r\n        print(Fore.GREEN + game_3)\r\n        b = int(input(\"Please choose game difficulty from 1 to 5: \"))\r\n        while b > 5 or b < 1:\r\n            print(\"the input suppose to be a number between 1 to 5\")\r\n            b = int(input(\"Please choose game difficulty from 1 to 5: \"))\r\n        difficulty = difficulty + str(b)\r\n        user_game = user_game + str(a)\r\n        print(f\"{user_game}, {difficulty}\")\r\n        f\"{Fore.CYAN} {load_game_assets()}\"\r\n        time.sleep(1), cls_screen()\r\n        if b == 1:\r\n            print(\"Hello This is a Rock,Paper,Scissors Game, Difficulty level 1 (Till 1)\")\r\n        elif b == 2:\r\n            print(\"Hello This is a Rock,Paper,Scissors Game, Difficulty level 2 (Till 2)\")\r\n        elif b == 3:\r\n            print(\"Hello This is a Rock,Paper,Scissors Game, Difficulty level 3 (Till 3)\")\r\n        elif b == 4:\r\n            print(\"Hello This is a Rock,Paper,Scissors Game, Difficulty level 4 (Till 4)\")\r\n        elif b == 5:\r\n            print(\"Hello This is a Rock,Paper,Scissors Game, Difficulty level 5 (Till 5)\")\r\n        if rock_game(diff[b]) == 1:\r\n            add_score(name, b)\r\n    # ======================Stop Web Server=======================\r\n    elif a == \"stop\":\r\n        print(\"Flask server stopping...You will not see your score anymore\")\r\n        stop_flask_server()\r\n    else:\r\n        print(\"\\n!!!!!!!!!!You have to choose between 1-3 OR stop!!!!!!!!!!\\n\")\r\n        load_game(name)\r\n    cls_screen()\r\n    load_game(name)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Live.py b/Live.py
+--- a/Live.py	(revision f0a1ff7359eba1d96841aee812a8e7b99a29965f)
++++ b/Live.py	(date 1701002651038)
+@@ -20,6 +20,7 @@
+ 
+ 
+ def load_game(name):  # Load game (With parameter name from Welcome())
++    print("Web Server access --> http://127.0.0.1:5000")
+     game_1 = "1. Guess Game - Guess a number and see if you chose like the computer"
+     game_2 = "2. Memory Game - A sequence of numbers will appear for and you have to guess it back"
+     game_3 = "3. Rock,Paper,Scissors Game - Lets see if you can beat the computer"
+Index: tests/e2e.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import sys\r\nfrom selenium import webdriver\r\nfrom selenium.webdriver.common.by import By\r\n\r\ndef test_scores_service():\r\n    global driver\r\n    try:\r\n        driver = webdriver.Firefox()\r\n        driver.get(\"http://127.0.0.1:5000\")\r\n\r\n        # Find the element by XPath\r\n        element = driver.find_element(By.XPATH, \"/html/body/ul/li\")\r\n\r\n        # Get the text from the element\r\n        element_text = element.text\r\n\r\n        # Split the text to extract the number\r\n        parts = element_text.split(':')\r\n        if len(parts) == 2:\r\n            score = parts[1].strip()\r\n            print(f\"Score: {score}\")\r\n\r\n            # Convert the score to an integer for testing\r\n            score = int(score)\r\n\r\n            if 1 <= score <= 1000:\r\n                print(\"Pass\")\r\n                return True\r\n            else:\r\n                print(\"Fail\")\r\n                return False\r\n\r\n    except Exception as e:\r\n        print(f\"Error: {e}\")\r\n        return False\r\n    finally:\r\n        driver.quit()\r\n\r\nif __name__ == \"__main__\":\r\n    test_scores_service()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/tests/e2e.py b/tests/e2e.py
+--- a/tests/e2e.py	(revision f0a1ff7359eba1d96841aee812a8e7b99a29965f)
++++ b/tests/e2e.py	(date 1701003277608)
+@@ -5,6 +5,7 @@
+ def test_scores_service():
+     global driver
+     try:
++        print("Testing Score 1/1000")
+         driver = webdriver.Firefox()
+         driver.get("http://127.0.0.1:5000")
+ 
+Index: docker-run
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>docker run --network git-pro_wog -it -p 5000:5000 vlad9976m/my_flask_app:v1.23
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/docker-run b/docker-run
+--- a/docker-run	(revision f0a1ff7359eba1d96841aee812a8e7b99a29965f)
++++ b/docker-run	(date 1701002840328)
+@@ -1,1 +1,4 @@
+-docker run --network git-pro_wog -it -p 5000:5000 vlad9976m/my_flask_app:v1.23
+\ No newline at end of file
++git clone https://github.com/vlad9976/git-pro.git
++cd git-pro
++docker compose up -d
++docker run --network git-pro_wog -it -p 5000:5000 vlad9976m/my_flask_app:v1.25
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"016a158c-7635-41b3-891f-ce76ce9f14f8\" name=\"Changes\" comment=\"reverted to pretty\">\r\n      <change afterPath=\"$PROJECT_DIR$/docker-run\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/scores-helm-chart/mysql-chart/files/init.sql\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/scores-helm-chart/mysql-chart/templates/init-configmap.yaml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_6_2023_10_39_AM_[Changes]/shelved.patch\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_6_2023_10_39_AM__Changes_.xml\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Live.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Live.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Main_Game.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Main_Game.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/alembic.ini\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/docker-compose.yml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/docker-compose.yml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/env.py\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/user.txt\" beforeDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2XWTNztCKHErq2OM6rSj4HkDqN4\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;C:/Users/VladMichaelov/PycharmProjects/ansible&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\VladMichaelov\\PycharmProjects\\git-pro\\scores-helm-chart\\mysql-chart\\files\" />\r\n      <recent name=\"C:\\Users\\VladMichaelov\\PycharmProjects\\git-pro\\sql\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Python.app\">\r\n    <configuration name=\"app\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"git-pro\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/app.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"e2e\" type=\"PythonConfigurationType\" factoryName=\"Python\" nameIsGenerated=\"true\">\r\n      <module name=\"git-pro\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"C:\\Users\\VladMichaelov\\PycharmProjects\\pythonProject\\venv\\Scripts\\python.exe\" />\r\n      <option name=\"SDK_NAME\" value=\"Python 3.10 (pythonProject)\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/tests\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/tests/e2e.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Python.app\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"016a158c-7635-41b3-891f-ce76ce9f14f8\" name=\"Changes\" comment=\"\" />\r\n      <created>1698743799825</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1698743799825</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"1.00-new\">\r\n      <created>1698744023447</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1698744023447</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"reverted to pretty\">\r\n      <created>1699260192075</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1699260192075</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"reverted to pretty\">\r\n      <created>1699260197198</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1699260197199</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"reverted to pretty\">\r\n      <created>1699274342344</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1699274342345</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"reverted to pretty\">\r\n      <created>1699274699843</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1699274699843</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"6\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"1.00-new\" />\r\n    <MESSAGE value=\"reverted to pretty\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"reverted to pretty\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision f0a1ff7359eba1d96841aee812a8e7b99a29965f)
++++ b/.idea/workspace.xml	(date 1701003278094)
+@@ -4,19 +4,12 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="016a158c-7635-41b3-891f-ce76ce9f14f8" name="Changes" comment="reverted to pretty">
+-      <change afterPath="$PROJECT_DIR$/docker-run" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/scores-helm-chart/mysql-chart/files/init.sql" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/scores-helm-chart/mysql-chart/templates/init-configmap.yaml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_6_2023_10_39_AM_[Changes]/shelved.patch" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_6_2023_10_39_AM__Changes_.xml" beforeDir="false" />
++    <list default="true" id="016a158c-7635-41b3-891f-ce76ce9f14f8" name="Changes" comment="pretty ready">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/Live.py" beforeDir="false" afterPath="$PROJECT_DIR$/Live.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Main_Game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main_Game.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/alembic.ini" beforeDir="false" />
+       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/env.py" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/user.txt" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/docker-run" beforeDir="false" afterPath="$PROJECT_DIR$/docker-run" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/tests/e2e.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/e2e.py" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -47,7 +40,7 @@
+       <recent name="C:\Users\VladMichaelov\PycharmProjects\git-pro\sql" />
+     </key>
+   </component>
+-  <component name="RunManager" selected="Python.app">
++  <component name="RunManager" selected="Python.e2e">
+     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+       <module name="git-pro" />
+       <option name="INTERPRETER_OPTIONS" value="" />
+@@ -141,7 +134,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1699274699843</updated>
+     </task>
+-    <option name="localTasksCounter" value="6" />
++    <task id="LOCAL-00006" summary="pretty ready">
++      <created>1701001622734</created>
++      <option name="number" value="00006" />
++      <option name="presentableId" value="LOCAL-00006" />
++      <option name="project" value="LOCAL" />
++      <updated>1701001622734</updated>
++    </task>
++    <option name="localTasksCounter" value="7" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -158,6 +158,7 @@
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="1.00-new" />
+     <MESSAGE value="reverted to pretty" />
+-    <option name="LAST_COMMIT_MESSAGE" value="reverted to pretty" />
++    <MESSAGE value="pretty ready" />
++    <option name="LAST_COMMIT_MESSAGE" value="pretty ready" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: docker-compose.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>version: '3.8'\r\n\r\nservices:\r\n  web:\r\n    build:\r\n      context: .\r\n      dockerfile: Dockerfile\r\n    image: vlad9976m/my_flask_app:v1.23\r\n    container_name: my-flask-application\r\n    ports:\r\n      - \"5000:5000\"\r\n    environment:\r\n      - FLASK_APP=app.py\r\n      - FLASK_RUN_HOST=0.0.0.0\r\n    volumes:\r\n      - ./scores:/app/scores  # Mount the scores directory\r\n    networks:\r\n      - wog\r\n    depends_on:\r\n      - mysql  # Depend on the MySQL service\r\n\r\n  mysql:\r\n    image: mysql:latest\r\n    environment:\r\n      MYSQL_ROOT_PASSWORD: Aa123456!\r\n      MYSQL_DATABASE: games\r\n      MYSQL_USER: mysql\r\n      MYSQL_PASSWORD: Aa123456!\r\n      MYSQL_ROOT_HOST: '%'\r\n    ports:\r\n      - \"3307:3306\"\r\n    volumes:\r\n      - ./init.sql:/docker-entrypoint-initdb.d/init.sql\r\n    networks:\r\n      - wog\r\n    command: --innodb_use_native_aio=0 --default-authentication-plugin=mysql_native_password\r\n\r\nnetworks:\r\n  wog:\r\n    driver: bridge\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/docker-compose.yml b/docker-compose.yml
+--- a/docker-compose.yml	(revision f0a1ff7359eba1d96841aee812a8e7b99a29965f)
++++ b/docker-compose.yml	(date 1701002763467)
+@@ -5,7 +5,7 @@
+     build:
+       context: .
+       dockerfile: Dockerfile
+-    image: vlad9976m/my_flask_app:v1.23
++    image: vlad9976m/my_flask_app:v1.25
+     container_name: my-flask-application
+     ports:
+       - "5000:5000"
