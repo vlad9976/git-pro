@@ -23,7 +23,7 @@ services:
     image: mysql:latest
     container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: "Aa123456!"  # Use MYSQL_ROOT_PASSWORD to set the root user password
+      MYSQL_ROOT_PASSWORD: ""  # Use MYSQL_ROOT_PASSWORD to set the root user password
       MYSQL_DATABASE: "games"
     networks:
       - wog
