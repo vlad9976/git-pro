@@ -7,7 +7,7 @@ app = Flask(__name__)
 # MySQL database configuration
 db_config = {
     'user': 'root',
-    'password': 'Aa123456!',
+    'password': '',
     'host': 'mysql',  # Use the correct service name
     'database': 'games'
 }
